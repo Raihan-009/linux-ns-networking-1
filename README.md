@@ -1,7 +1,7 @@
 # linux-ns-networking-1
 
 
-## Linux Networking Stack
+## Linux Network Stack
 
 ![network-stack](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/482ee565-aff7-4853-90de-13401024239f.png)
 
@@ -37,3 +37,56 @@ ip route show
 iptables -L
 ```
 ![iptables](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/1c910ea8-e9ed-44b4-94e4-da755eb561fa.png)
+
+
+## Create Custom Network Namespace
+
+Let's create a custom namespace using `ip netns add` utiliy.
+
+![ns](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/d90d5bb0-0f7b-408e-89d8-a1403da7d356.png)
+
+
+```bash
+sudo ip netns add ryuzaki
+sudo ip netns list
+```
+
+![ns](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/aa03c245-42f3-48d5-90bb-67c9183038a3.png)
+
+Now, entering a network namespace in Linux:
+
+`ip netns exec`
+
+It is part of the iproute2 package and is often used for managing network namespaces. 
+
+```bash
+sudo ip netns exec ryuzaki bash
+```
+
+`nsenter`
+
+The `nsenter` utility is commonly used to enter into namespaces in Linux, including network namespaces.
+
+```bash
+sudo nsenter --net=/var/run/netns/ryuzaki bash
+```
+
+![ns-exec](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/4c97214b-8977-48d2-9739-ff1790336f58.png)
+
+
+Now, check the network interfaces inside the new ns.
+
+```bash
+ip link show
+```
+
+![ip-link-list](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/f7a0695f-9fea-4261-9fe8-c985ecf7aa7b.png)
+
+Let's check for `iptable` rules for custom ns.
+
+![ns-iptables](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/21eecbb6-60d8-4181-bab8-f788259564e2.png)
+
+```bash
+ifconfig lo
+```
+![lo](https://lab-bucket.s3.brilliant.com.bd/labthumbnail/8d4d30c7-f834-482c-b342-7c4aa8aa09b1.png)
